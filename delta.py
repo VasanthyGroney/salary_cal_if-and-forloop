@@ -1,40 +1,48 @@
-# hours_worked: The number of hours the employee worked (an integer)
-# hourly_rate: The hourly rate of the employee (a float)
-# Write a function calculate_overtime_pay(employees) that takes a list of employee records and performs the following tasks:
-#
-# Calculate the total pay for each employee based on their hours worked and hourly rate:
-# For hours up to 40, use the regular hourly rate.
-# For hours over 40, calculate overtime pay at 1.5 times the hourly rate for each overtime hour.
-# Return a new list of dictionaries where each dictionary contains:
-# name: The name of the employee
-# hours_worked: The total hours worked by the employee
-# total_pay: The total pay for the employee
-# Example Input
 from employee import employees
 
-def information_employee(employees):
-    salary = []
-    if input_employee in employees:
-        for employee in employees:
-            name = employee['name']
-            hours_worked = employee['hours_worked']
-            hourly_rate = employee['hourly_rate']
-            salary = hours_worked * hourly_rate
-        return salary
 
-def overtime_salary(extra_hour):
-    if input_employee in employees:
-        for employee in employees:
-            name = employee['name']
-            overtime_worked =
-            overtime = overtime_worked * hourly_rate
-            hourly_rate = employee['hourly_rate']
-            salary = hours_worked * hourly_rate
-        return salary
+def calculate_overtime_pay(hours_worked, hourly_rate):
+    """Calculate the overtime pay for an employee."""
+    if hours_worked <= 40:
+        return 0.0
+    else:
+        overtime_hours = hours_worked - 40
+        overtime_pay = overtime_hours * hourly_rate * 1.5
+        return overtime_pay
 
 
-input_employee = input("Enter Employee Nmae: ")
-overtime = int(input(f"Enter {input_employee} overtime hours: "))
+def calculate_total_pay(employee):
+    """Calculate the total pay for an employee, including overtime."""
+    name = employee['name']
+    hours_worked = employee['hours_worked']
+    hourly_rate = employee['hourly_rate']
+
+    regular_pay = min(hours_worked, 40) * hourly_rate
+    overtime_pay = calculate_overtime_pay(hours_worked, hourly_rate)
+    total_pay = regular_pay + overtime_pay
+
+    return {
+        "name": name,
+        "hours_worked": hours_worked,
+        "total_pay": round(total_pay, 2)  # Round total pay to 2 decimal places
+    }
 
 
+# Get input from user
+input_employee_name = input("Enter Employee Name: ")
 
+# Find the employee record
+employee_record = next((emp for emp in employees if emp['name'].lower() == input_employee_name.lower()), None)
+
+if employee_record:
+    # Prompt for any additional overtime hours
+    extra_hours = int(input(f"Enter any additional overtime hours for {input_employee_name}: "))
+    employee_record['hours_worked'] += extra_hours
+
+    # Calculate the total pay
+    total_pay_info = calculate_total_pay(employee_record)
+
+    # Print the result
+    print(total_pay_info)
+else:
+    print("Employee not found.")
